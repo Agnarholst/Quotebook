@@ -1,14 +1,22 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function App() {
-  // State to store the list of quotes. 
-  const [quotes, SetQuotes] = useState([
+  // Retrieve quotes from localStorage if avaiable, otherwise use default quotes
+  const [quotes, SetQuotes] = useState(() => {
+    const savedQuotes = localStorage.getItem('quotes')
+    return savedQuotes ? JSON.parse(savedQuotes) : [
     { id: 1, text:  'If I had to live my life again, I’d make the same mistakes, only sooner.'},
     { id: 2, text: 'Well done is better than well said.'},
-  ]);
+  ];
+});
 
   // State to store the new quote input by the user
   const [newQuote, setNewQuote] = useState('');
+
+  // Save quote to localStorage whenever the 'quotes' state changes
+  useEffect(() => {
+    localStorage.setItem('quotes', JSON.stringify(quotes));
+  }, [quotes]);
 
   // Function to handle adding a new quote to the list
   const addQuote = () => {
@@ -18,6 +26,7 @@ function App() {
       setNewQuote(''); // Clear the input field
     }
   };
+
 
   return (
     <div className='App'>
